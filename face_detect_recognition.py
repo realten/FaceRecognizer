@@ -19,7 +19,6 @@ Takes two arguments:
 '''
 
 import cv2
-import cv2.cv as cv
 import numpy as np
 from os import listdir
 import sys, time
@@ -67,7 +66,7 @@ if __name__== "__main__":
 	# initializing eigen_model and training
 	print("Initializing eigen FaceRecognizer and training...")
 	sttime= time.clock()
-	eigen_model= cv2.createEigenFaceRecognizer()
+	eigen_model= cv2.face.EigenFaceRecognizer_create()
 	eigen_model.train(images, labels)
 	print("\tSuccessfully completed training in "+ str(time.clock()- sttime)+ " Secs!")
 
@@ -90,7 +89,7 @@ if __name__== "__main__":
 		#starting to detect face in given image
 		frontal_face= cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 		#bBoxes= frontal_face.detectMultiScale(pre_image, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags = cv.CV_HAAR_SCALE_IMAGE)
-		bBoxes= frontal_face.detectMultiScale(pre_image, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30), flags = cv.CV_HAAR_SCALE_IMAGE)
+		bBoxes= frontal_face.detectMultiScale(pre_image, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30), flags = cv2.CASCADE_SCALE_IMAGE)
 
 		for bBox in bBoxes:
 			(p,q,r,s)= bBox
@@ -111,6 +110,6 @@ if __name__== "__main__":
 
 		cv2.imshow("Win1", color_image)
 		#cv2.imshow("Win2", pre_crop_image)
-		cv2.waitKey(0)
+		cv2.waitKey(3000)
 
 		#starting to predict subject/ person in cropped (detected) image

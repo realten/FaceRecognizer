@@ -61,7 +61,7 @@ if __name__== "__main__":
 	# initializing eigen_model and training
 	print("Initializing eigen FaceRecognizer and training...")
 	sttime= time.clock()
-	eigen_model= cv2.createEigenFaceRecognizer()
+	eigen_model= cv2.face.EigenFaceRecognizer_create()
 	eigen_model.train(images, labels)
 	print("\tSuccessfully completed training in "+ str(time.clock()- sttime)+ " Secs!")
 

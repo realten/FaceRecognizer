@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 '''
 Surya Teja Cheedella
 shine123surya[at]gmail[dot]com
@@ -21,11 +22,11 @@ Takes one argument:
 '''
 
 import cv2
-import cv2.cv as cv
+#import cv2.cv as cv
 import numpy as np
 import os
 import sys, time
-import requests, facebook
+#import requests, facebook
 
 def get_images(path, size):
     '''
@@ -40,16 +41,18 @@ def get_images(path, size):
     people= []
 
     for subdir in os.listdir(path):
+        print('for 1')
+        #if os.path.isdir(subdir):
         for image in os.listdir(path+ "/"+ subdir):
-            #print(subdir, images)
+            print(subdir, images)
             img= cv2.imread(path+os.path.sep+subdir+os.path.sep+image, cv2.IMREAD_GRAYSCALE)
             img= cv2.resize(img, size)
 
             images.append(np.asarray(img, dtype= np.uint8))
             labels.append(sub)
 
-            #cv2.imshow("win", img)
-            #cv2.waitKey(10)
+                #cv2.imshow("win", img)
+                #cv2.waitKey(10)
 
         people.append(subdir)
         sub+= 1
@@ -61,7 +64,7 @@ def detect_faces(image):
     Takes an image as input and returns an array of bounding box(es).
     '''
     frontal_face= cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-    bBoxes= frontal_face.detectMultiScale(image, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30), flags = cv.CV_HAAR_SCALE_IMAGE)
+    bBoxes= frontal_face.detectMultiScale(image, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30), flags = cv2.CASCADE_SCALE_IMAGE)
 
     return bBoxes
 
@@ -78,7 +81,7 @@ def train_model(path):
     # initializing eigen_model and training
     print("Initializing eigen FaceRecognizer and training...")
     sttime= time.clock()
-    eigen_model= cv2.createEigenFaceRecognizer()
+    eigen_model= cv2.face.EigenFaceRecognizer_create()
     eigen_model.train(images, labels)
     print("\tSuccessfully completed training in "+ str(time.clock()- sttime)+ " Secs!")
 
@@ -136,7 +139,7 @@ if __name__== "__main__":
         sys.exit()
 
     arg_one= sys.argv[1]
-    eigen_model, people= train_model(arg_one)
+    eigen_model, people = train_model(arg_one)
 
     #starts recording video from camera and detects & predict subjects
     cap= cv2.VideoCapture(0)
@@ -177,7 +180,7 @@ if __name__== "__main__":
                 #box_text= format("Subject: "+ people[max_label])
                 box_text= format("Subject: "+ people[predicted_label])
 
-                if counter> 20:
+                if counter == -20:
                     print("Will post on facebook timeline if this counter reaches to 5: "+ str(len(final_5)+ 1))
                     final_5.append(max_label)       #it always takes max_label into consideration
                     if len(final_5)== 5:
